@@ -24,8 +24,10 @@ interface ListProps {
 const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
     const [active, setActive] = useState<string>("")
     const handleOnClick = (video: Video) => {
+
         onSelectVideo(video)
         setActive(video.file)
+
     }
     const activeRef: any = useRef();
     const scrollToRef = (ref: any) => ref.current.scrollIntoView({          behavior: 'smooth',

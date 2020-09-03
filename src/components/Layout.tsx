@@ -20,24 +20,28 @@ const Layout = () => {
 
     useEffect(() => {
         const currentTime = parseFloat(localStorage.getItem('currentTime') || "0")
+        console.log("currentTime",currentTime)
         const currentFile = localStorage.getItem('currentFile') || ""
         for (let videoCategory of videoList.videos) {
             const currentVideoItem = (videoCategory.videos.find(videoItem => videoItem.file === currentFile))
-            console.log('currentVideoItem', currentVideoItem)
+
             if (currentVideoItem) {
                 setVideo(currentVideoItem)
                 setTime(currentTime)
             }
         }
     }, [videoList])
-
+    const onSelectVideo = (video:Video) => {
+        setVideo(video)
+        setTime(0)
+    }
     return (
         <>
             <h3>{video.name}</h3>
             <div className="parent">
                 <Player {...video} time={time}/>
 
-                <List videos={videoList} onSelectVideo={setVideo} activeVideo={video}/>
+                <List videos={videoList} onSelectVideo={onSelectVideo} activeVideo={video}/>
             </div>
         </>
     );
