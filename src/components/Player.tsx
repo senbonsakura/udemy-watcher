@@ -48,13 +48,13 @@ const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
                     const vttConverter = new VTTConverter(blob)
                     vttConverter.getURL().then((url: string) => {
                         trackRef.current.src = url
-                        videoRef.current.textTracks[0].mode = "show"
+                        //videoRef.current.textTracks[0].mode = "show"
                     })
                 })
 
 
         }
-        file && videoRef.current.play()
+        //file && videoRef.current.play()
         file && saveFile()
         file && saveTime()
     }, [file, saveFile, subtitle])
@@ -62,9 +62,9 @@ const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
     return (
         <div>
             {isEnded && <PlayNext setEnded={setEnded} onFinish={onFinish}/>}
-            <video id="video" controls preload="metadata" ref={videoRef} key={file} onEnded={onEnded}>
+            <video id="video" controls preload="metadata" ref={videoRef} key={file} onEnded={onEnded} autoPlay>
                 <source src={`${file}${time > 0 ? `#t=${time}` : ''}`} type="video/mp4"/>
-                <track ref={trackRef} label="English" kind="subtitles" srcLang="en" src={subtitle} default/>
+                <track ref={trackRef} label="English" kind="subtitles" srcLang="en" src={subtitle.endsWith("srt") ? undefined : subtitle} default/>
             </video>
         </div>
 );

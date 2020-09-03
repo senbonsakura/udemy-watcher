@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 export type Video = {
     name: string,
@@ -24,21 +24,23 @@ interface ListProps {
 const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
     const [active, setActive] = useState<string>("")
     const handleOnClick = (video: Video) => {
-
         onSelectVideo(video)
         setActive(video.file)
-
     }
+    const onSetActive = useCallback(() => {
+        setActive(activeVideo.file)
+    },[activeVideo.file])
+
     const activeRef: any = useRef();
     const scrollToRef = (ref: any) => ref.current.scrollIntoView({          behavior: 'smooth',
         block: 'center',
     })
 
     useEffect(() => {
-        setActive(activeVideo.file)
+        onSetActive()
         activeRef.current && scrollToRef(activeRef)
 
-        },[activeVideo.file]
+        },
     )
     return (
         <div className="list">
