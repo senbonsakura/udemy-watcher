@@ -15,14 +15,23 @@
   color: white;
 }
 
-.parent {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  .parent {
+    display: grid;
+    grid-template-columns: 1fr minmax(150px, 25%) ;
+  }
+
+
+
+@media (max-width: 1024px) {
+  .parent{
+    display: flex;
+    flex-direction: column;
+  }
+
 }
+
 .parent>div {
-  flex: 1 1 150px; /*  Stretching: */
-  flex: 0 1 400px; /*  No stretching: */
+
   margin: 5px;
 }
 
