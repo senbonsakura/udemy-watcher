@@ -1,4 +1,6 @@
 import React, {useRef, useEffect} from 'react';
+// @ts-ignore
+import VTTConverter from 'srt-webvtt';
 
 type PlayerProps = {
     file: string,
@@ -8,14 +10,15 @@ type PlayerProps = {
 }
 
 const Player = ({file, subtitle,name,time}: PlayerProps) => {
-    const playerRef:any = useRef<HTMLVideoElement>(null)
+    const videoRef:any = useRef<HTMLVideoElement>(null)
+    const trackRef:any = useRef<HTMLTrackElement>(null)
     const saveFile = () => {
         window.localStorage.setItem('currentFile', file)
         window.localStorage.setItem('currentSubtitle', subtitle)
     }
 
     const saveTime = () => {
-        window.localStorage.setItem('currentTime', playerRef.current.currentTime)
+        window.localStorage.setItem('currentTime', videoRef.current.currentTime)
     }
 
     useEffect(()=> {
@@ -26,16 +29,33 @@ const Player = ({file, subtitle,name,time}: PlayerProps) => {
     }, [])
 
     useEffect(()=> {
-        file && playerRef.current.play()
+
+        if (subtitle.endsWith("srt")) {
+            fetch(subtitle)
+                .then(res=>res.blob())
+                .then(blob=> {
+                    console.log(blob)
+                    const vttConverter = new VTTConverter(blob)
+                    vttConverter.getURL().then((url:string)=> {
+                        console.log('url',url)
+                        trackRef.current.src = url
+                        videoRef.current.textTracks[0].mode = "show"
+                    })
+                })
+
+
+
+        }
+        file && videoRef.current.play()
         file && saveFile()
         file && saveTime()
     },[file])
 
     return (
         <div>
-            <video id="video" controls preload="metadata" ref={playerRef} key={file}>
+            <video id="video" controls preload="metadata" ref={videoRef} key={file}>
                 <source src={`${file}${time > 0 ? `#t=${time}`:''}`} type="video/mp4"/>
-                <track label="English" kind="subtitles" srcLang="en" src={subtitle} default/>
+                <track ref={trackRef} label="English" kind="subtitles" srcLang="en" src={subtitle} default/>
             </video>
         </div>
     );
