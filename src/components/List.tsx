@@ -38,7 +38,7 @@ const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
         setActive(activeVideo.file)
         activeRef.current && scrollToRef(activeRef)
 
-        },
+        },[activeVideo.file]
     )
     return (
         <div className="list">

@@ -35,11 +35,31 @@ const Layout = () => {
         setVideo(video)
         setTime(0)
     }
+    const getNextVideo =(videoList:VideoList, currentVideo:Video):Video => {
+        for (let cat of videoList.videos) {
+            for(let vid of cat.videos) {
+                const currentCategoryIndex = videoList.videos.findIndex(currentCat=>cat.category===currentCat.category)
+                if (vid.file === currentVideo.file) {
+                    const currentVideoIndex = cat.videos.findIndex(item=>item.file===vid.file)
+                    if (currentVideoIndex < cat.videos.length -1) {
+                        return cat.videos[currentVideoIndex + 1]
+                    } else {
+                        return videoList.videos[currentCategoryIndex + 1].videos[0]
+                }
+
+                }
+            }
+        }
+        return {name:"Finished",file:"",subtitle:""}
+    }
+    const onFinish = ():void => {
+        onSelectVideo(getNextVideo(videoList,video))
+    }
     return (
         <>
             <h3>{video.name}</h3>
             <div className="parent">
-                <Player {...video} time={time}/>
+                <Player {...video} time={time} onFinish={onFinish}/>
 
                 <List videos={videoList} onSelectVideo={onSelectVideo} activeVideo={video}/>
             </div>

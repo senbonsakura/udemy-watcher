@@ -1,64 +1,73 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 // @ts-ignore
 import VTTConverter from 'srt-webvtt';
+import PlayNext from "./PlayNext";
 
 type PlayerProps = {
     file: string,
     subtitle: string,
-    name:string,
-    time:number
+    name: string,
+    time: number,
+    onFinish: () => void
 }
 
-const Player = ({file, subtitle,name,time}: PlayerProps) => {
-    const videoRef:any = useRef<HTMLVideoElement>(null)
-    const trackRef:any = useRef<HTMLTrackElement>(null)
-    const saveFile = () => {
+
+const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
+
+    const [isEnded, setEnded] = useState(false);
+
+    const onEnded = () => {
+        setEnded(true)
+
+
+    }
+    const videoRef: any = useRef<HTMLVideoElement>(null)
+    const trackRef: any = useRef<HTMLTrackElement>(null)
+    const saveFile = useCallback(() => {
         window.localStorage.setItem('currentFile', file)
         window.localStorage.setItem('currentSubtitle', subtitle)
-    }
+    }, [file, subtitle])
 
     const saveTime = () => {
         window.localStorage.setItem('currentTime', videoRef.current.currentTime)
     }
 
-    useEffect(()=> {
+    useEffect(() => {
         window.addEventListener("beforeunload", saveTime);
-        return function() {
+        return function () {
             window.removeEventListener("beforeunload", saveTime);
         }
-    }, [])
+    },)
 
-    useEffect(()=> {
+    useEffect(() => {
 
         if (subtitle.endsWith("srt")) {
             fetch(subtitle)
-                .then(res=>res.blob())
-                .then(blob=> {
-                    console.log(blob)
+                .then(res => res.blob())
+                .then(blob => {
                     const vttConverter = new VTTConverter(blob)
-                    vttConverter.getURL().then((url:string)=> {
-                        console.log('url',url)
+                    vttConverter.getURL().then((url: string) => {
                         trackRef.current.src = url
                         videoRef.current.textTracks[0].mode = "show"
                     })
                 })
 
 
-
         }
         file && videoRef.current.play()
         file && saveFile()
         file && saveTime()
-    },[file])
+    }, [file, saveFile, subtitle])
 
     return (
         <div>
-            <video id="video" controls preload="metadata" ref={videoRef} key={file}>
-                <source src={`${file}${time > 0 ? `#t=${time}`:''}`} type="video/mp4"/>
+            {isEnded && <PlayNext setEnded={setEnded} onFinish={onFinish}/>}
+            <video id="video" controls preload="metadata" ref={videoRef} key={file} onEnded={onEnded}>
+                <source src={`${file}${time > 0 ? `#t=${time}` : ''}`} type="video/mp4"/>
                 <track ref={trackRef} label="English" kind="subtitles" srcLang="en" src={subtitle} default/>
             </video>
         </div>
-    );
+);
 };
 
 export default Player;
