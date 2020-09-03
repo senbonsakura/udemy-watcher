@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {RefObject, useCallback, useEffect, useRef, useState} from 'react';
 
 export type Video = {
     name: string,
@@ -32,24 +32,29 @@ const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
     },[activeVideo.file])
 
     const activeRef: any = useRef();
-    const scrollToRef = (ref: any) => ref.current.scrollIntoView({          behavior: 'smooth',
-        block: 'center',
-    })
+    const parentRef: any = useRef();
+    const scrollToRef = (ref: any) => {
+        if (activeRef.current) {
+            parentRef.current.scrollTop = activeRef.current.offsetTop - 500
+        }
+    };
 
     useEffect(() => {
         onSetActive()
-        activeRef.current && scrollToRef(activeRef)
-
+        scrollToRef(activeRef)
         },
     )
     return (
-        <div className="list">
+        <div className="list" ref={parentRef}>
             {videos.videos.map((category: VideoCategory, key) =>
                 <h5 key={key}>
                     {category.category}
                     <ol>{category.videos.map((video: Video, key) =>
-                        <h6 key={video.name} className={active === video.file ? 'active' : ''}>
-                            <li ref={active === video.file ? activeRef : null}
+                        <h6 key={video.name}
+                            className={active === video.file ? 'active' : ''}
+                            ref={active === video.file ? activeRef : null}
+                        >
+                            <li
                                 onClick={() => handleOnClick(video)}>{video.name}
                             </li>
                         </h6>)}
