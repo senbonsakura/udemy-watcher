@@ -4,8 +4,8 @@ const path = require('path')
 const app = express();
 const router = express.Router();
 
-const videoFolder = 'E:\\Videos'
-
+const videoFolder = process.argv.slice(2).join(" ")
+console.log("videofolder", videoFolder)
 router.get('/api', ((req, res) => {
 
   const root = path.join(videoFolder)
@@ -47,9 +47,8 @@ router.get('/api', ((req, res) => {
 
   );
 }));
-
 app.use(router);
 app.use('/videos',express.static(videoFolder))
 app.listen(3001, () => {
-  console.log('Server listening on 3001');
+  console.log(`Serving files in ${videoFolder}`);
 });
