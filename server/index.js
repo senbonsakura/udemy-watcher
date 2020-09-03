@@ -16,36 +16,39 @@ router.get('/api', ((req, res) => {
   folders.forEach((item) => {
     const filePath = path.join(root, item);
     let category = {};
-    let videos = []
+    let videos = [];
     if (fs.statSync(filePath).isDirectory()) {
 
       category.category = item;
 
-      const files = fs.readdirSync(filePath).filter(item=>[...subExtensions,...videoExtensions].includes(path.extname(item).toLowerCase()));
+      const files = fs.readdirSync(filePath).filter(item => [...subExtensions, ...videoExtensions].includes(path.extname(item).toLowerCase()));
       const relativePath = path.join('videos', filePath.replace(videoFolder, ''));
       files.forEach((file) => {
         const extension = path.extname(file);
-        const name = path.basename(file, extension);
-        let objIndex = videos.findIndex(item=>item.name=name)
+        let name = path.basename(file, extension);
+        if (subExtensions.includes(extension)) {
+          name = path.basename(file, extension).replace( /\.[a-zA-Z]{2,3}$/gm,"")
+        }
+
+        let objIndex = videos.findIndex(item => item.name === name);
         if (objIndex === -1) {
-          videos.push({name})
-          objIndex = videos.length - 1
+          videos.push({name});
+          objIndex = videos.length - 1;
         }
         let relativeFile = path.join(relativePath, file);
         if (videoExtensions.includes(extension.toLowerCase())) {
-          videos[objIndex].file = relativeFile
+          videos[objIndex].file = relativeFile;
         } else if (subExtensions.includes(extension.toLowerCase())) {
-          videos[objIndex].subtitle = relativeFile
+          videos[objIndex].subtitle = relativeFile;
         }
 
       });
 
     }
     if (videos.length > 0) {
-      category.videos = videos
+      category.videos = videos;
       fileList.push(category);
     }
-
 
   });
   res.send({videos: fileList}
