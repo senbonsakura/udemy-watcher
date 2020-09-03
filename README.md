@@ -1,12 +1,15 @@
 Udemy player clone for watching downloaded Udemy Courses
 
-Change videoFolder in server\index.js.
-Also convert srt subtitles to vtt if you need subtitle support.
+First install dependencies with
+``npm install``
 
-./npm install
+Then 
+ 
+``npm run start "C:\My Fictional Udemy Course\"``
 
-to install dependencies,
+to start watching
 
-
-./npm run start start watching
+If browser doesn't open automatically, go to
+``localhost:3000``
+ 
 
