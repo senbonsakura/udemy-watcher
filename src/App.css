@@ -85,3 +85,9 @@ h6.active {
 
 
 
+::cue {
+  background-color: transparent;
+  color: yellow;
+  font-size: 1em;
+  text-outline: #f7f8fa 3px;
+}
