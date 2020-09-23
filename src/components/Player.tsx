@@ -61,12 +61,10 @@ const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
                 })
         }
         const onTrackLoaded = () => {
-            console.log("track loaded")
             if (trackRef && trackRef.current) {
                 const track = trackRef.current.track
                 const cues = track.cues
                 for (let j = 0;j < cues.length;j++) {
-                    console.log(cues[j])
                     let new_cue = new VTTCue(cues[j].startTime,cues[j].endTime, cues[j].text);
                     new_cue.line = 98
                     new_cue.snapToLines = false
