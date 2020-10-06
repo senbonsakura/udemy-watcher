@@ -66,8 +66,8 @@ const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
                 const cues = track.cues
                 for (let j = 0;j < cues.length;j++) {
                     let new_cue = new VTTCue(cues[j].startTime,cues[j].endTime, cues[j].text);
-                    new_cue.line = 98
-                    new_cue.snapToLines = false
+                    new_cue.line = 95
+                    new_cue.snapToLines = true
                     track.removeCue(cues[j])
                     track.addCue(new_cue)
 

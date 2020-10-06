@@ -12,7 +12,10 @@ router.get('/api', ((req, res) => {
   const root = path.join(videoFolder);
   const folders = fs.readdirSync(root);
   let fileList = [];
-
+  const sortNumerical = (a,b)=> {
+    const regex = /[0-9]+/m;
+    return regex.exec(b) - regex.exec(a)
+  }
   folders.forEach((item) => {
     const filePath = path.join(root, item);
     let category = {};
@@ -21,7 +24,7 @@ router.get('/api', ((req, res) => {
 
       category.category = item;
 
-      const files = fs.readdirSync(filePath).filter(item => [...subExtensions, ...videoExtensions].includes(path.extname(item).toLowerCase()));
+      const files = fs.readdirSync(filePath).filter(item => [...subExtensions, ...videoExtensions].includes(path.extname(item).toLowerCase())).sort(sortNumerical);
       const relativePath = path.join('videos', filePath.replace(videoFolder, ''));
       files.forEach((file) => {
         const extension = path.extname(file);
