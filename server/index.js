@@ -7,15 +7,17 @@ const router = express.Router();
 const videoExtensions = ['.mp4'];
 const subExtensions = ['.vtt', '.srt'];
 const videoFolder = process.argv.slice(2).join(' ');
+const sortNumerical = (a,b)=> {
+  const regex = /[0-9]+/m;
+  return regex.exec(a) - regex.exec(b)
+}
 router.get('/api', ((req, res) => {
 
   const root = path.join(videoFolder);
-  const folders = fs.readdirSync(root);
+  const unsorted_folders = fs.readdirSync(root);
+  const folders = unsorted_folders.sort(sortNumerical)
   let fileList = [];
-  const sortNumerical = (a,b)=> {
-    const regex = /[0-9]+/m;
-    return regex.exec(b) - regex.exec(a)
-  }
+
   folders.forEach((item) => {
     const filePath = path.join(root, item);
     let category = {};
