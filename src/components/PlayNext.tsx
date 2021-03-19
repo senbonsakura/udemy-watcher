@@ -8,7 +8,7 @@ type PlayNextProps = {
 }
 
 const PlayNext = ({setEnded, onFinish}:PlayNextProps) => {
-    const [timeLeft,setTimeLeft] = useState(300);
+    const [timeLeft,setTimeLeft] = useState(3);
     const [timerCancelled, setTimeCancelled] = useState(false)
     const onCancel =() => {
         setTimeCancelled(true)
