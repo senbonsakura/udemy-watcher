@@ -6,7 +6,10 @@ const router = express.Router();
 
 const videoExtensions = ['.mp4'];
 const subExtensions = ['.vtt', '.srt'];
-const videoFolder = process.argv.slice(2).join(' ').split("\\\\").join("\\")
+
+const [, , videoPath] = process.argv
+const videoFolder = path.normalize(videoPath)
+
 const sortNumerical = (a,b)=> {
   const regex = /[0-9]+/m;
   return regex.exec(a) - regex.exec(b)
