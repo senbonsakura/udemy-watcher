@@ -57,8 +57,10 @@ const Layout = () => {
     }
     return (
         <>
-            <h3>{video.name}</h3>
+
             <div className="parent">
+
+
                 <Player {...video} time={time} onFinish={onFinish}/>
 
                 <List videos={videoList} onSelectVideo={onSelectVideo} activeVideo={video}/>

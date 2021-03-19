@@ -61,6 +61,7 @@ const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
                 })
         }
         const onTrackLoaded = () => {
+            setEnded(false)
             if (trackRef && trackRef.current) {
                 const track = trackRef.current.track
                 const cues = track.cues
@@ -85,14 +86,15 @@ const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
     }, [file, saveFile, subtitle])
 
     return (
-        <div>
-            {isEnded && <PlayNext setEnded={setEnded} onFinish={onFinish}/>}
+        <div className="player">
             <video id="video" controls preload="metadata" ref={videoRef} key={file} onEnded={onEnded} autoPlay
                    width={'100%'}>
                 <source src={`${file}${time > 0 ? `#t=${time}` : ''}`} type="video/mp4"/>
                 <track ref={trackRef} label="English" kind="subtitles" srcLang="en"
                        src={subtitle.endsWith("srt") ? undefined : subtitle} default/>
             </video>
+            {isEnded && <PlayNext setEnded={setEnded} onFinish={onFinish}/>}
+
         </div>
     );
 };

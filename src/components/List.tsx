@@ -1,4 +1,4 @@
-import React, {RefObject, useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 export type Video = {
     name: string,
@@ -29,39 +29,46 @@ const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
     }
     const onSetActive = useCallback(() => {
         setActive(activeVideo.file)
-    },[activeVideo.file])
+    }, [activeVideo.file])
 
-    const activeRef: any = useRef();
-    const parentRef: any = useRef();
-    const scrollToRef = (ref: any) => {
-        if (activeRef.current) {
-            parentRef.current.scrollTop = activeRef.current.offsetTop - 500
+    const activeRef = useRef<HTMLDivElement>(null);
+    const parentRef = useRef<HTMLDivElement>(null);
+
+    const scrollToActiveItem = () => {
+        if (activeRef.current && parentRef.current) {
+            const rect = parentRef.current.getBoundingClientRect()
+            const visibleHeight = rect.height
+            const visibleHeightRatio = window.innerHeight / visibleHeight
+            const parentOffsetHeight = parentRef.current.scrollHeight
+            const top = activeRef.current.offsetTop - visibleHeight / 2
+            activeRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
         }
     };
 
     useEffect(() => {
-        onSetActive()
-        scrollToRef(activeRef)
+            onSetActive()
+            scrollToActiveItem()
         },
     )
     return (
-        <div className="list" ref={parentRef}>
-            {videos.videos.map((category: VideoCategory, key) =>
-                <h5 key={key}>
-                    {category.category}
-                    <ol>{category.videos.map((video: Video, key) =>
-                        <h6 key={video.name}
-                            className={active === video.file ? 'active' : ''}
-                            ref={active === video.file ? activeRef : null}
-                        >
-                            <li
-                                onClick={() => handleOnClick(video)}>{video.name}
-                            </li>
-                        </h6>)}
-                    </ol>
-                </h5>
-            )}
-        </div>
+            <div className="list" ref={parentRef}>
+                {videos.videos.map((category: VideoCategory, key) =>
+                    <h5 key={key}>
+                        {category.category}
+                        <ol>{category.videos.map((video: Video, key) =>
+                            <h6 key={video.name}
+                                className={active === video.file ? 'active' : ''}
+                                ref={active === video.file ? activeRef : null}
+                            >
+                                <li
+                                    onClick={() => handleOnClick(video)}>{video.name}
+                                </li>
+                            </h6>)}
+                        </ol>
+                    </h5>
+                )}
+            </div>
     );
 };
 

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import playButton from "../play.svg";
+import CancelNext from "./CancelNext";
 
 type PlayNextProps = {
     setEnded: (end:boolean)=>void,
@@ -7,7 +8,11 @@ type PlayNextProps = {
 }
 
 const PlayNext = ({setEnded, onFinish}:PlayNextProps) => {
-    const [timeLeft,setTimeLeft] = useState(3);
+    const [timeLeft,setTimeLeft] = useState(300);
+    const [timerCancelled, setTimeCancelled] = useState(false)
+    const onCancel =() => {
+        setTimeCancelled(true)
+    }
 
     useEffect(() => {
         const timer = setTimeout(()=> {
@@ -18,20 +23,26 @@ const PlayNext = ({setEnded, onFinish}:PlayNextProps) => {
             }
 
         },1000)
-
+        timerCancelled && clearTimeout(timer)
         return ()=> clearTimeout(timer)
-    },[timeLeft])
+    },[timeLeft, setTimeCancelled])
 
     return (
+        <>
         <div className={`video-player--center-button active}`}>
             <button onClick={onFinish}>
                 <img height="96" width="96"
-                     alt="Play video"
+                     alt="Play next video"
                      tabIndex={0} className=""
                      src={playButton}/>
-                <h2 style={{left:'50%',top:'50%'}}>{timeLeft}</h2>
+
+
             </button>
-        </div>
+            <div className="video-player--timer-text" hidden={timerCancelled}>Next in {timeLeft}</div>
+            {!timerCancelled && <CancelNext onCancel={onCancel}/>}
+            </div>
+
+        </>
     );
 };
 
