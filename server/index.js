@@ -64,6 +64,6 @@ router.get('/api', ((req, res) => {
 }));
 app.use(router);
 app.use('/videos', express.static(videoFolder));
-app.listen(3001, () => {
+app.listen(4001, () => {
   console.log(`Serving files in ${videoFolder}`);
 });

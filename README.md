@@ -10,6 +10,6 @@ Then
 to start watching
 
 If browser doesn't open automatically, go to
-``localhost:3000``
+``localhost:4000``
  
 

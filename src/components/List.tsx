@@ -35,12 +35,8 @@ const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
     const parentRef = useRef<HTMLDivElement>(null);
 
     const scrollToActiveItem = () => {
-        if (activeRef.current && parentRef.current) {
-            const rect = parentRef.current.getBoundingClientRect()
-            const visibleHeight = rect.height
-            const visibleHeightRatio = window.innerHeight / visibleHeight
-            const parentOffsetHeight = parentRef.current.scrollHeight
-            const top = activeRef.current.offsetTop - visibleHeight / 2
+        if (activeRef.current) {
+
             activeRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
         }
