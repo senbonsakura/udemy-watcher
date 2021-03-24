@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import playButton from "../play.svg";
 import CancelNext from "./CancelNext";
-
+import styles from './PlayNext.module.css'
+import {Video} from "./List";
 type PlayNextProps = {
     setEnded: (end:boolean)=>void,
-    onFinish: () => void
+    onFinish: () => void,
+    nextVideo?:Video
 }
 
-const PlayNext = ({setEnded, onFinish}:PlayNextProps) => {
-    const [timeLeft,setTimeLeft] = useState(3);
+const PlayNext = ({setEnded, onFinish, nextVideo}:PlayNextProps) => {
+    const [timeLeft,setTimeLeft] = useState(300);
     const [timerCancelled, setTimeCancelled] = useState(false)
     const onCancel =() => {
         setTimeCancelled(true)
@@ -27,9 +29,9 @@ const PlayNext = ({setEnded, onFinish}:PlayNextProps) => {
         return ()=> clearTimeout(timer)
     },[timeLeft, setTimeCancelled])
 
-    return (
-        <>
-        <div className={`video-player--center-button active}`}>
+     return nextVideo ? (
+
+        <div className={styles.play_next__container}>
             <button onClick={onFinish}>
                 <img height="96" width="96"
                      alt="Play next video"
@@ -38,12 +40,12 @@ const PlayNext = ({setEnded, onFinish}:PlayNextProps) => {
 
 
             </button>
-            <div className="video-player--timer-text" hidden={timerCancelled}>Next in {timeLeft}</div>
+            <div className={styles.timer_text} hidden={timerCancelled}>{nextVideo.name} in {timeLeft}</div>
             {!timerCancelled && <CancelNext onCancel={onCancel}/>}
             </div>
 
-        </>
-    );
+    ) :
+         <h3>Congratulations, Course is Over</h3>
 };
 
 export default PlayNext;

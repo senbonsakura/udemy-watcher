@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './CancelNext.module.css'
 
 type CancelNextProps = {
     onCancel: ()=>void,
@@ -7,7 +8,7 @@ type CancelNextProps = {
 
 const CancelNext = ({onCancel}:CancelNextProps) => {
     return (
-        <button className="video-player--cancel-button" onClick={onCancel}>
+        <button className={styles.cancel_button} onClick={onCancel}>
             Cancel
         </button>
     );

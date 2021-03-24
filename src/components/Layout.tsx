@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Player from "./Player";
 import List, {Video, VideoList} from "./List";
+import styles from './Layout.module.css'
 
 const Layout = () => {
 
@@ -17,6 +18,11 @@ const Layout = () => {
             )
 
     }, [])
+    const onSetCurrentVideo = (video:Video) => {
+        video["nextVideo"] = getNextVideo(videoList, video)
+        video["isActive"] = true
+        setVideo(video)
+    }
 
     useEffect(() => {
         const currentTime = parseFloat(localStorage.getItem('currentTime') || "0")
@@ -26,13 +32,14 @@ const Layout = () => {
             const currentVideoItem = (videoCategory.videos.find(videoItem => videoItem.file === currentFile))
 
             if (currentVideoItem) {
-                setVideo(currentVideoItem)
+                onSetCurrentVideo(currentVideoItem)
                 setTime(currentTime)
             }
         }
     }, [videoList])
-    const onSelectVideo = (video:Video) => {
-        setVideo(video)
+    const onSelectVideo = (selectedVideo:Video) => {
+        video["isActive"] = false
+        onSetCurrentVideo(selectedVideo)
         setTime(0)
     }
     const getNextVideo =(videoList:VideoList, currentVideo:Video):Video => {
@@ -58,7 +65,7 @@ const Layout = () => {
     return (
         <>
 
-            <div className="parent">
+            <div className={styles.parent}>
 
 
                 <Player {...video} time={time} onFinish={onFinish}/>

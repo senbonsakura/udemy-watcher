@@ -1,9 +1,14 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+import styles from './List.module.css'
+import ListSection from "./ListSection";
+import ListOpenButton from "./ListOpenButton";
 
 export type Video = {
     name: string,
     file: string,
-    subtitle: string
+    subtitle: string,
+    isActive?: boolean,
+    nextVideo?: Video
 }
 
 export type VideoCategory = {
@@ -18,53 +23,49 @@ export type VideoList = {
 interface ListProps {
     videos: VideoList,
     onSelectVideo: Function,
-    activeVideo: Video
+    activeVideo: Video,
 }
 
 const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
-    const [active, setActive] = useState<string>("")
-    const handleOnClick = (video: Video) => {
+    const handleOnSelectVideo = (video: Video) => {
         onSelectVideo(video)
-        setActive(video.file)
     }
-    const onSetActive = useCallback(() => {
-        setActive(activeVideo.file)
-    }, [activeVideo.file])
+    const [isClosed, setClosed]=useState(false)
+    const handleIsClosed = () => setClosed(!isClosed)
 
     const activeRef = useRef<HTMLDivElement>(null);
-    const parentRef = useRef<HTMLDivElement>(null);
 
     const scrollToActiveItem = () => {
         if (activeRef.current) {
-
-            activeRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
-
+            activeRef.current.scrollIntoView({behavior: 'smooth', block: 'center'})
         }
     };
 
     useEffect(() => {
-            onSetActive()
             scrollToActiveItem()
         },
-    )
+        [activeVideo])
     return (
-            <div className="list" ref={parentRef}>
-                {videos.videos.map((category: VideoCategory, key) =>
-                    <h5 key={key}>
-                        {category.category}
-                        <ol>{category.videos.map((video: Video, key) =>
-                            <h6 key={video.name}
-                                className={active === video.file ? 'active' : ''}
-                                ref={active === video.file ? activeRef : null}
-                            >
-                                <li
-                                    onClick={() => handleOnClick(video)}>{video.name}
-                                </li>
-                            </h6>)}
-                        </ol>
-                    </h5>
-                )}
-            </div>
+        !isClosed  ? <div className={styles.list}>
+
+                <h2 className={styles.list__header}>Course Content
+                    <button onClick={handleIsClosed}>x</button>
+                </h2>
+
+
+            {videos.videos.map((category: VideoCategory, key) => {
+                let isActiveCategory = false;
+                if (activeVideo.file) {
+                    isActiveCategory = !!category.videos.find(video => video.file === activeVideo.file)
+                }
+
+                return <ListSection category={category} key={key} onSelectVideo={handleOnSelectVideo}
+                                    activeRef={activeRef}
+                                    isActiveCategory={isActiveCategory}/>
+
+            })}
+        </div> :
+            <ListOpenButton onOpen={handleIsClosed}/>
     );
 };
 

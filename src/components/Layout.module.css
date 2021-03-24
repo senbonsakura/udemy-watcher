@@ -1,0 +1,22 @@
+
+.parent {
+    display: flex;
+
+}
+
+
+
+@media (max-width: 1024px) {
+    .parent{
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+
+    }
+
+}
+
+.parent>div {
+
+    margin: 5px;
+}

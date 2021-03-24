@@ -1,0 +1,11 @@
+.player {
+    position: relative;
+    max-height: 100vw;
+}
+
+video{
+    max-height: 100vh;
+}
+video:focus {
+    outline: none;
+}

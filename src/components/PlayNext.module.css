@@ -1,0 +1,45 @@
+.play_next__container {
+    width: 300px;
+
+    background: rgba(0,0,0,0.8);
+    padding: 5px;
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 1;
+    transition: all .2s ease;
+    color: #f7f8fa;
+    display: flex;
+    flex-direction: column;
+
+
+}
+@media (max-width: 1024px) {
+    .play_next__container{
+        top:50%
+
+    }
+
+}
+
+.play_next__container button {
+    position: relative;
+    border: none;
+    background-color: transparent;
+    text-align: center;
+    cursor: pointer;
+}
+.play_next__container img {
+
+}
+
+.timer_text {
+
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    text-align: center;
+    color: #f7f8fa;
+    font-size: 0.8em;
+}
+
+

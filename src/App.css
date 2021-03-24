@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+
 
 }
 
@@ -9,49 +9,13 @@ body {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #e9e6e6;
 
   font-size: calc(10px + 2vmin);
   color: white;
 }
 
-  .parent {
-    display: grid;
-    grid-template-columns: 75% minmax(150px, 25%) ;
-  }
 
-
-
-@media (max-width: 1024px) {
-  .parent{
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-
-  }
-
-}
-
-.parent>div {
-
-  margin: 5px;
-}
-
-
-.list{
-  overflow-y:scroll;
-  height: 100vh;
-
-}
-.player {
-position: relative;
-
-}
-video{
-}
-video:focus {
-  outline: none;
-}
 
 h6{
   font-weight: normal;
@@ -63,51 +27,7 @@ li {
   cursor: pointer;
 }
 
-h6.active {
-  font-weight: bold;
-  border-width:2px;
-  border-style:dotted;
-}
 
-.video-player--center-button {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  z-index: 1;
-  transition: all .2s ease;
-  color: #f7f8fa;
-  display: block;
-  opacity: 1;
-
-}
-
-
-.video-player--center-button button {
-  position: relative;
-
-  background-color: transparent;
-  text-align: center;
-  cursor: pointer;
-}
-.video-player--center-button img {
-  opacity: .8;
-}
-
-.video-player--timer-text {
-
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-
-  color: #f7f8fa;
-  font-size: 1em;
-
-
-}
-.video-player--cancel-button {
-  font-size: 0.5em;
-  font-weight: bold;
-  color:cornsilk;
-}
 
 ::cue {
   background-color: transparent;

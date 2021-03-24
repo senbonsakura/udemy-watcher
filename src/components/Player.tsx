@@ -2,17 +2,21 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 // @ts-ignore
 import VTTConverter from 'srt-webvtt';
 import PlayNext from "./PlayNext";
+import {Video} from "./List";
+import styles from './Player.module.css'
+
 
 type PlayerProps = {
     file: string,
     subtitle: string,
     name: string,
     time: number,
-    onFinish: () => void
+    onFinish: () => void,
+    nextVideo?: Video
 }
 
 
-const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
+const Player = ({file, subtitle, time, onFinish, nextVideo}: PlayerProps) => {
 
     const [isEnded, setEnded] = useState(false);
 
@@ -40,9 +44,7 @@ const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
         }
     },)
 
-    interface TextTrackCueWithLine extends TextTrackCue {
-        line: number
-    }
+
 
     useEffect(() => {
 
@@ -73,7 +75,7 @@ const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
                     track.addCue(new_cue)
 
                 }
-                console.log("is ready?",track)
+
 
             }
         }
@@ -86,14 +88,14 @@ const Player = ({file, subtitle, name, time, onFinish}: PlayerProps) => {
     }, [file, saveFile, subtitle])
 
     return (
-        <div className="player">
+        <div className={styles.player}>
             <video id="video" controls preload="metadata" ref={videoRef} key={file} onEnded={onEnded} autoPlay
                    width={'100%'}>
                 <source src={`${file}${time > 0 ? `#t=${time}` : ''}`} type="video/mp4"/>
                 <track ref={trackRef} label="English" kind="subtitles" srcLang="en"
                        src={subtitle.endsWith("srt") ? undefined : subtitle} default/>
             </video>
-            {isEnded && <PlayNext setEnded={setEnded} onFinish={onFinish}/>}
+            {isEnded && <PlayNext setEnded={setEnded} onFinish={onFinish} nextVideo={nextVideo}/>}
 
         </div>
     );
