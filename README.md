@@ -5,7 +5,7 @@ First install dependencies with
 
 Then 
  
-``npm run start "C:\My Fictional Udemy Course\"``
+``npm run start ``
 
 to start watching
 

@@ -1,3 +1,4 @@
+
 .App {
 
 
@@ -37,3 +38,6 @@ li {
 }
 
 
+* {
+  box-sizing: border-box;
+}

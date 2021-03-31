@@ -1,9 +1,10 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 // @ts-ignore
 import VTTConverter from 'srt-webvtt';
 import PlayNext from "./PlayNext";
 import {Video} from "./List";
 import styles from './Player.module.css'
+import {pathContext} from "../state/PathContext";
 
 
 type PlayerProps = {
@@ -17,7 +18,7 @@ type PlayerProps = {
 
 
 const Player = ({file, subtitle, time, onFinish, nextVideo}: PlayerProps) => {
-
+    const {path} = useContext(pathContext)
     const [isEnded, setEnded] = useState(false);
 
     const onEnded = () => {
@@ -27,13 +28,14 @@ const Player = ({file, subtitle, time, onFinish, nextVideo}: PlayerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null)
     const trackRef = useRef<HTMLTrackElement>(null)
     const saveFile = useCallback(() => {
-        window.localStorage.setItem('currentFile', file)
-        window.localStorage.setItem('currentSubtitle', subtitle)
-    }, [file, subtitle])
+        localStorage.setItem('currentPath', path)
+        localStorage.setItem('currentFile', file)
+        localStorage.setItem('currentSubtitle', subtitle)
+    }, [path, file, subtitle])
 
     const saveTime = () => {
         if (videoRef && videoRef.current) {
-            window.localStorage.setItem('currentTime', videoRef.current.currentTime.toString())
+            localStorage.setItem('currentTime', videoRef.current.currentTime.toString())
         }
     }
 
@@ -84,7 +86,7 @@ const Player = ({file, subtitle, time, onFinish, nextVideo}: PlayerProps) => {
         }
         //file && videoRef.current.play()
         file && saveFile()
-        file && saveTime()
+
     }, [file, saveFile, subtitle])
 
     return (

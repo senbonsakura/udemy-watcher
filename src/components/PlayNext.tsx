@@ -10,7 +10,7 @@ type PlayNextProps = {
 }
 
 const PlayNext = ({setEnded, onFinish, nextVideo}:PlayNextProps) => {
-    const [timeLeft,setTimeLeft] = useState(300);
+    const [timeLeft,setTimeLeft] = useState(3);
     const [timerCancelled, setTimeCancelled] = useState(false)
     const onCancel =() => {
         setTimeCancelled(true)
@@ -27,7 +27,7 @@ const PlayNext = ({setEnded, onFinish, nextVideo}:PlayNextProps) => {
         },1000)
         timerCancelled && clearTimeout(timer)
         return ()=> clearTimeout(timer)
-    },[timeLeft, setTimeCancelled])
+    },[timeLeft, setTimeCancelled, timerCancelled, setEnded, onFinish])
 
      return nextVideo ? (
 
@@ -37,8 +37,6 @@ const PlayNext = ({setEnded, onFinish, nextVideo}:PlayNextProps) => {
                      alt="Play next video"
                      tabIndex={0} className=""
                      src={playButton}/>
-
-
             </button>
             <div className={styles.timer_text} hidden={timerCancelled}>{nextVideo.name} in {timeLeft}</div>
             {!timerCancelled && <CancelNext onCancel={onCancel}/>}

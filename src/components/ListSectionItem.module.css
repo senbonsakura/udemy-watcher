@@ -1,0 +1,19 @@
+.video {
+    cursor:pointer;
+    font-size: 16px;
+}
+
+.active {
+    background: #e6f2f5;
+}
+.item__container {
+    display:flex;
+    flex-direction: column;
+    padding: 8px 16px;
+
+}
+.time {
+    padding-top: 2px;
+    font-size: 12px;
+
+}

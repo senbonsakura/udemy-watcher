@@ -8,7 +8,8 @@ export type Video = {
     file: string,
     subtitle: string,
     isActive?: boolean,
-    nextVideo?: Video
+    nextVideo?: Video,
+    duration:number
 }
 
 export type VideoCategory = {
@@ -43,6 +44,7 @@ const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
 
     useEffect(() => {
             scrollToActiveItem()
+            document.title = activeVideo.name
         },
         [activeVideo])
     return (
@@ -52,7 +54,7 @@ const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
                     <button onClick={handleIsClosed}>x</button>
                 </h2>
 
-
+            <div className={styles.list__body}>
             {videos.videos.map((category: VideoCategory, key) => {
                 let isActiveCategory = false;
                 if (activeVideo.file) {
@@ -64,6 +66,7 @@ const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
                                     isActiveCategory={isActiveCategory}/>
 
             })}
+            </div>
         </div> :
             <ListOpenButton onOpen={handleIsClosed}/>
     );

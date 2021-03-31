@@ -1,6 +1,7 @@
 import React, {RefObject, useEffect, useState} from 'react';
 import {Video, VideoCategory} from "./List";
 import styles from './ListSection.module.css'
+import ListSectionItem, {toTimeString} from './ListSectionItem';
 
 interface ListSecionProps {
     category: VideoCategory,
@@ -16,36 +17,33 @@ const ListSection = ({category, onSelectVideo, activeRef, isActiveCategory}: Lis
         setExpanded(!isExpanded)
 
     }
-    useEffect(()=> {
+    useEffect(() => {
         isActiveCategory && setExpanded(true)
-    },[isActiveCategory])
+    }, [isActiveCategory])
 
     return (
         <div className={styles.section__container}>
 
-            <div className={styles.section__header}>
+            <div className={styles.section__header} onClick={onExpand}>
+                <div>
+                <div className={styles.section__header__title}>{category.category}</div>
+                <span className={styles.expand__button} ><i
+                    className={`${styles.arrow} ${isExpanded ? styles.down : styles.right}`}/></span>
+                </div>
+                <div className={styles.time}>{`${category.videos.length}`} videos | {toTimeString(category.videos.reduce((acc,video)=> acc + video.duration,0))}</div>
 
-                <span>{category.category}</span>
-                <button onClick={onExpand}><i className={`${styles.arrow} ${isExpanded ? styles.down : styles.right}`}/></button>
-            </div>
+
             <div className={`${styles.section__body} ${isExpanded ? styles.expanded : ''}`}>
-                <ul>
-                    <div>{category.videos.map((video: Video, key) =>
 
-                        <li key={video.name}>
-                            <div
-                                className={video.isActive ? styles.active : ''}
-                                ref={video.isActive ? activeRef : null}
-                            >
-                                <div className={styles.video}
-                                     onClick={() => onSelectVideo(video)}>{key + 1} .{video.name}
-                                </div>
-                            </div>
-                        </li>)}
-                    </div>
-                </ul>
             </div>
-
+            </div>
+            {isExpanded &&<ul className={styles.section__body}>
+                <div>{category.videos.map((video: Video, key) => <ListSectionItem id={key} key={key} video={video}
+                                                                                  onSelectVideo={onSelectVideo}
+                                                                                  activeRef={activeRef}/>
+                )}
+                </div>
+            </ul> }
         </div>
     );
 };

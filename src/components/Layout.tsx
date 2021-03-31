@@ -1,28 +1,29 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Player from "./Player";
 import List, {Video, VideoList} from "./List";
 import styles from './Layout.module.css'
+import {pathContext} from "../state/PathContext";
 
 const Layout = () => {
-
-    const [video, setVideo] = useState<Video>({file: "", subtitle: "", name: ""});
+    const {path} = useContext(pathContext)
+    const [video, setVideo] = useState<Video>({file: "", subtitle: "", name: "", duration:0});
     const [time, setTime] = useState<number>(0)
     const [videoList, setVideoList] = useState<VideoList>({videos: []})
 
     useEffect(() => {
-        fetch('/api')
+        fetch(`/api?path=${path}`)
             .then(response => response.json())
             .then(resVideoList => {
                     setVideoList(resVideoList)
                 }
             )
 
-    }, [])
-    const onSetCurrentVideo = (video:Video) => {
+    }, [path])
+    const onSetCurrentVideo = useCallback((video:Video) => {
         video["nextVideo"] = getNextVideo(videoList, video)
         video["isActive"] = true
         setVideo(video)
-    }
+    },[videoList])
 
     useEffect(() => {
         const currentTime = parseFloat(localStorage.getItem('currentTime') || "0")
@@ -36,7 +37,7 @@ const Layout = () => {
                 setTime(currentTime)
             }
         }
-    }, [videoList])
+    }, [onSetCurrentVideo, videoList])
     const onSelectVideo = (selectedVideo:Video) => {
         video["isActive"] = false
         onSetCurrentVideo(selectedVideo)
@@ -57,13 +58,13 @@ const Layout = () => {
                 }
             }
         }
-        return {name:"Finished",file:"",subtitle:""}
+        return {name:"Finished",file:"",subtitle:"",duration:0}
     }
     const onFinish = ():void => {
         onSelectVideo(getNextVideo(videoList,video))
     }
     return (
-        <>
+        path?
 
             <div className={styles.parent}>
 
@@ -72,7 +73,7 @@ const Layout = () => {
 
                 <List videos={videoList} onSelectVideo={onSelectVideo} activeVideo={video}/>
             </div>
-        </>
+        :<></>
     );
 };
 

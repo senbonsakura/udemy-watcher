@@ -1,0 +1,30 @@
+.off {
+    display: none;
+}
+.toggler {
+    display: flex;
+    justify-content: center;
+    height: 0;
+}
+.toggler>button {
+    opacity: 0.1;
+    height: 20px;
+    z-index: 10;
+}
+
+.toggler>button:hover {
+    opacity: 1;
+}
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
