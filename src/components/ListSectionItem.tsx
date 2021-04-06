@@ -12,11 +12,13 @@ interface ListSectionItemProps {
 
 export const toTimeString = (seconds:number):string =>{
     const date = new Date(0);
-    date.setSeconds(seconds);
+    date.setSeconds(seconds || 0);
+
     return date.toISOString().substr(11, 8);
 
 }
 const ListSectionItem = ({video, onSelectVideo, activeRef, id}: ListSectionItemProps) =>
+
     (
         <li key={id} onClick={() => onSelectVideo(video)}>
             <div className={`${styles.item__container} ${video.isActive ? styles.active : ''} `} ref={video.isActive ? activeRef : null}>

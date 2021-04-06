@@ -5,43 +5,41 @@ import styles from './Layout.module.css'
 import {pathContext} from "../state/PathContext";
 
 const Layout = () => {
-    const {path} = useContext(pathContext)
-    const [video, setVideo] = useState<Video>({file: "", subtitle: "", name: "", duration:0});
-    const [time, setTime] = useState<number>(0)
-    const [videoList, setVideoList] = useState<VideoList>({videos: []})
+    const {videoList,setVideoList,currentVideo,setCurrentVideo, currentCourse,setCurrentCourse} = useContext(pathContext)
 
-    useEffect(() => {
-        fetch(`/api?path=${path}`)
-            .then(response => response.json())
-            .then(resVideoList => {
-                    setVideoList(resVideoList)
-                }
-            )
-
-    }, [path])
     const onSetCurrentVideo = useCallback((video:Video) => {
         video["nextVideo"] = getNextVideo(videoList, video)
         video["isActive"] = true
-        setVideo(video)
-    },[videoList])
+        setCurrentVideo(video)
+    },[videoList, setCurrentVideo])
 
     useEffect(() => {
-        const currentTime = parseFloat(localStorage.getItem('currentTime') || "0")
+        //const currentTime = parseFloat(localStorage.getItem('currentTime') || "0")
 
-        const currentFile = localStorage.getItem('currentFile') || ""
+        //const currentFile = localStorage.getItem('currentFile') || ""
         for (let videoCategory of videoList.videos) {
-            const currentVideoItem = (videoCategory.videos.find(videoItem => videoItem.file === currentFile))
+            const currentVideoItem = (videoCategory.videos.find(videoItem => videoItem.file === currentCourse.currentFile))
 
             if (currentVideoItem) {
                 onSetCurrentVideo(currentVideoItem)
-                setTime(currentTime)
+                //setTime(currentTime)
             }
         }
-    }, [onSetCurrentVideo, videoList])
+    }, [currentCourse.currentFile, onSetCurrentVideo, videoList])
     const onSelectVideo = (selectedVideo:Video) => {
-        video["isActive"] = false
+        videoList.videos.forEach(videoCategory=> {
+            const video = videoCategory.videos.find(video=>video.isActive===true)
+            if (video) {
+                video.isActive= false
+                delete video["nextVideo"]
+            }
+
+
+        })
+        setVideoList(videoList)
         onSetCurrentVideo(selectedVideo)
-        setTime(0)
+        currentCourse.currentTime = 0
+        setCurrentCourse(currentCourse)
     }
     const getNextVideo =(videoList:VideoList, currentVideo:Video):Video => {
         for (let cat of videoList.videos) {
@@ -51,7 +49,7 @@ const Layout = () => {
                     const currentVideoIndex = cat.videos.findIndex(item=>item.file===vid.file)
                     if (currentVideoIndex < cat.videos.length -1) {
                         return cat.videos[currentVideoIndex + 1]
-                    } else {
+                    } else if(videoList.videos.length > currentCategoryIndex + 1) {
                         return videoList.videos[currentCategoryIndex + 1].videos[0]
                 }
 
@@ -61,17 +59,17 @@ const Layout = () => {
         return {name:"Finished",file:"",subtitle:"",duration:0}
     }
     const onFinish = ():void => {
-        onSelectVideo(getNextVideo(videoList,video))
+        onSelectVideo(getNextVideo(videoList,currentVideo))
     }
     return (
-        path?
+        videoList.videos.length > 0  ?
 
             <div className={styles.parent}>
 
 
-                <Player {...video} time={time} onFinish={onFinish}/>
+                <Player {...currentVideo} time={currentCourse.currentTime} onFinish={onFinish}/>
 
-                <List videos={videoList} onSelectVideo={onSelectVideo} activeVideo={video}/>
+                <List videos={videoList} onSelectVideo={onSelectVideo} activeVideo={currentVideo}/>
             </div>
         :<></>
     );

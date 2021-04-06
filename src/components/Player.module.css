@@ -1,6 +1,7 @@
 .player {
     position: relative;
     max-height: 100vw;
+    width: 100%;
 }
 
 video{
@@ -8,4 +9,11 @@ video{
 }
 video:focus {
     outline: none;
+}
+
+.no__video {
+    color:#000;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
 }

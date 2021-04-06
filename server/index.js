@@ -1,17 +1,14 @@
 const express = require('express');
-const cache = require('./cache')
+const cache = require('./cache');
 const fs = require('fs');
-const fsp = fs.promises;
 const path = require('path');
 const app = express();
 const router = express.Router();
-const { getVideoDurationInSeconds } = require('get-video-duration')
+const {getVideoDurationInSeconds} = require('get-video-duration');
 
 const videoExtensions = ['.mp4'];
 const subExtensions = ['.vtt', '.srt'];
 
-//const [, , videoPath] = process.argv
-//
 function is_dir (path) {
   try {
     var stat = fs.lstatSync(path);
@@ -22,94 +19,93 @@ function is_dir (path) {
   }
 }
 
-
-
-async function getVideoDuration(path) {
-
-  return await getVideoDurationInSeconds(path)
-
-}
-
 const sortNumerical = (a, b) => {
   const regex = /[0-9]+/m;
   return regex.exec(a) - regex.exec(b);
 };
+const getSubtitleFile = (absolutePath) => {
 
-function getVideoFileList (videoFolder) {
+  const [subtitleRoot, folder, videoFile] = absolutePath;
+  const name = videoFile
+    .split('.').slice(0, -1).join('.');
+  for (let ext of subExtensions) {
+    try {
+      const subtitlePath = [subtitleRoot, folder, name + ext];
+      if (fs.existsSync(path.join(...subtitlePath))) {
+        return subtitlePath;
+      }
+    } catch {
 
-  const unsorted_folders = fs.readdirSync(videoFolder);
+    }
+
+  }
+
+};
+
+const getRelativePath = (filePath) => {
+  if (filePath) {
+    const [root, ...relativePath] = filePath;
+    return path.join('videos', ...relativePath);
+  }
+};
+
+const toVideo = async (absolutePath) => {
+  const video = path.join(...absolutePath).split(path.sep).slice(-1)[0];
+  const name = video.split('.').slice(0, -1).join('.');
+  const file = getRelativePath(absolutePath);
+
+  const subtitle = getRelativePath(getSubtitleFile(absolutePath));
+
+  return {name, file, subtitle, duration: await getVideoDurationInSeconds(path.join(...absolutePath))};
+};
+
+async function getVideoFileList (rootFolder) {
+
+  const unsorted_folders = fs.readdirSync(rootFolder);
   const folders = unsorted_folders.sort(sortNumerical);
   let fileList = [];
-  let promises = []
-  folders.forEach((item) => {
-    const filePath = path.join(videoFolder, item);
-    let category = {};
-    let videos = [];
+  let videos = [];
+  for (const folder of folders) {
+    const filePath = [rootFolder, folder];
+    let category = {videos: []};
 
-    if (fs.statSync(filePath).isDirectory()) {
+    if (fs.statSync(path.join(...filePath)).isDirectory()) {
 
-      category.category = item;
+      category.category = folder;
 
-      const files = fs.readdirSync(filePath)
-        .filter(item => [...subExtensions, ...videoExtensions]
+      const files = fs.readdirSync(path.join(...filePath))
+        .filter(item => [...videoExtensions]
           .includes(path.extname(item).toLowerCase()))
         .sort(sortNumerical);
 
-      const relativePath = path.join('videos', filePath.replace(videoFolder, ''));
-      files.forEach((file) => {
-        const extension = path.extname(file);
-        let name = path.basename(file, extension);
-        if (subExtensions.includes(extension)) {
-          name = path.basename(file, extension).replace(/\.[a-zA-Z]{2,3}$/gm, '');
-        }
-        const realPath = path.join(filePath, file);
-        let objIndex = videos.findIndex(item => item.name === name);
-        if (objIndex === -1) {
-          videos.push({name});
-          objIndex = videos.length - 1;
-        }
-        let relativeFile = path.join(relativePath, file);
-        if (videoExtensions.includes(extension.toLowerCase())) {
-          videos[objIndex].file = relativeFile;
-          promises.push(getVideoDuration(realPath).then(duration => {
-            videos[objIndex].duration = duration;
-          }))
+      for await (let video of files.map(video => toVideo([...filePath, video]))) {
+        category.videos.push(video);
+      }
 
+      if (category.videos.length > 0) {
 
-        } else if (subExtensions.includes(extension.toLowerCase())) {
-          videos[objIndex].subtitle = relativeFile;
-        }
-
-
-      });
+        fileList.push(category);
+      }
 
     }
-    if (videos.length > 0) {
-      category.videos = videos;
-      fileList.push(category);
-    }
 
-  });
-  return new Promise(resolve => Promise.all(promises).then(()=> {
-    resolve(fileList)
-  }))
+  }
+  return fileList;
 
 }
 
-router.get('/api',cache(3600), ((req, res) => {
-  const videoFolder = path.normalize(req.query.path);
+router.get('/api', cache(3600), ((req, res) => {
+  const rootFolder = path.normalize(req.query.path);
 
-  const isdir = is_dir(videoFolder);
-  if (!isdir) {
+  if (!is_dir(rootFolder)) {
     res.status(500).send('Invalid Folder');
     return;
   }
 
-  getVideoFileList(videoFolder).then(fileList=> {
-    app.use('/videos', express.static(videoFolder));
-    res.send({videos: fileList});
-  })
-
+  app.use('/videos', express.static(rootFolder));
+  getVideoFileList(rootFolder).then(videoList => {
+    res.send({videos: videoList});
+  });
 
 }));
 app.use(router);

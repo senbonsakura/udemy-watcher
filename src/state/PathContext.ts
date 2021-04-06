@@ -1,13 +1,27 @@
 import React from 'react'
+import {Video, VideoList} from "../components/List";
+import {Course} from "../interfaces/Course";
 
-export interface PathContext{
-    path:string,
-    setCurrentPath: (currentpath:string)=>void
+export interface PathContext {
+
+    videoList: VideoList,
+    setVideoList: (videos: VideoList) => void;
+    currentVideo: Video,
+    setCurrentVideo: (video: Video) => void;
+    currentCourse: Course;
+    setCurrentCourse:(course:Course)=>void
 }
 
+export const emptyVideo = {name: "", file: "", subtitle: "", duration: 0}
+
 export const PATH_DEFAULT_VALUE = {
-    path: '',
-    setCurrentPath: ()=>{ }
+
+    videoList: {videos: []},
+    setVideoList: () => {},
+    currentVideo: emptyVideo,
+    setCurrentVideo: () => {},
+    currentCourse: new Course({path: ''}),
+    setCurrentCourse:()=> {}
 }
 
 

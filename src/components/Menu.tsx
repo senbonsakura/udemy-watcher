@@ -5,12 +5,12 @@ import {pathContext} from "../state/PathContext";
 
 
 const Menu = () => {
-    const {path} = useContext(pathContext)
+    const {videoList} = useContext(pathContext)
     const [toggle,setToggle] = useState(true)
     const handleOnToggle = () => setToggle(!toggle)
     return (
         <>
-        <div className={path && toggle ? styles.off : styles.on}>
+        <div className={videoList.videos.length > 0 && toggle ? styles.off : styles.on}>
             <PathForm/>
         </div>
             <div className={styles.toggler}>
