@@ -38,7 +38,7 @@ const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
 
     const scrollToActiveItem = () => {
         if (activeRef.current) {
-            activeRef.current.scrollIntoView({behavior: 'smooth', block: 'center'})
+            activeRef.current.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'nearest' })
         }
     };
 

@@ -15,24 +15,26 @@ const PlayNext = ({setEnded, onFinish, nextVideo}:PlayNextProps) => {
     const onCancel =() => {
         setTimeCancelled(true)
     }
-
+    const onPlayNext =  () => {
+        setEnded(false)
+        onFinish()
+    }
     useEffect(() => {
         const timer = setTimeout(()=> {
             setTimeLeft(timeLeft -1)
             if (timeLeft===0){
-                setEnded(false)
-                onFinish()
+                onPlayNext()
             }
 
         },1000)
         timerCancelled && clearTimeout(timer)
         return ()=> clearTimeout(timer)
-    },[timeLeft, setTimeCancelled, timerCancelled, setEnded, onFinish])
+    },[timeLeft, setTimeCancelled, timerCancelled, setEnded, onFinish, onPlayNext])
 
      return nextVideo ? (
 
         <div className={styles.play_next__container}>
-            <button onClick={onFinish}>
+            <button onClick={onPlayNext}>
                 <img height="96" width="96"
                      alt="Play next video"
                      tabIndex={0} className=""

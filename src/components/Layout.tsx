@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import Player from "./Player";
 import List, {Video, VideoList} from "./List";
 import styles from './Layout.module.css'
@@ -14,15 +14,12 @@ const Layout = () => {
     },[videoList, setCurrentVideo])
 
     useEffect(() => {
-        //const currentTime = parseFloat(localStorage.getItem('currentTime') || "0")
 
-        //const currentFile = localStorage.getItem('currentFile') || ""
         for (let videoCategory of videoList.videos) {
             const currentVideoItem = (videoCategory.videos.find(videoItem => videoItem.file === currentCourse.currentFile))
 
             if (currentVideoItem) {
                 onSetCurrentVideo(currentVideoItem)
-                //setTime(currentTime)
             }
         }
     }, [currentCourse.currentFile, onSetCurrentVideo, videoList])

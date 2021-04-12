@@ -11,7 +11,7 @@ const subExtensions = ['.vtt', '.srt'];
 
 function is_dir (path) {
   try {
-    var stat = fs.lstatSync(path);
+    const stat = fs.lstatSync(path);
     return stat.isDirectory();
   } catch (e) {
     // lstatSync throws an error if path doesn't exist
@@ -29,22 +29,20 @@ const getSubtitleFile = (absolutePath) => {
   const name = videoFile
     .split('.').slice(0, -1).join('.');
   for (let ext of subExtensions) {
-    try {
-      const subtitlePath = [subtitleRoot, folder, name + ext];
-      if (fs.existsSync(path.join(...subtitlePath))) {
-        return subtitlePath;
-      }
-    } catch {
 
+    const subtitlePath = [subtitleRoot, folder];
+    const subtitle =fs.readdirSync(path.join(...subtitlePath))
+      .filter(file => file.startsWith(name) && file.endsWith(ext));
+    if (subtitle.length) {
+      return [...subtitlePath,subtitle[0]]
     }
-
   }
 
 };
 
 const getRelativePath = (filePath) => {
   if (filePath) {
-    const [root, ...relativePath] = filePath;
+    const [, ...relativePath] = filePath;
     return path.join('videos', ...relativePath);
   }
 };
@@ -64,7 +62,6 @@ async function getVideoFileList (rootFolder) {
   const unsorted_folders = fs.readdirSync(rootFolder);
   const folders = unsorted_folders.sort(sortNumerical);
   let fileList = [];
-  let videos = [];
   for (const folder of folders) {
     const filePath = [rootFolder, folder];
     let category = {videos: []};

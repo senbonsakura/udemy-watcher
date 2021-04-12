@@ -10,7 +10,7 @@ body {
 }
 
 .App-header {
-  background-color: #e9e6e6;
+  background-color: #ffffff;
 
   font-size: calc(10px + 2vmin);
   color: white;
@@ -40,4 +40,8 @@ li {
 
 * {
   box-sizing: border-box;
+}
+
+.video-js {
+  position: inherit !important;
 }

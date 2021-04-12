@@ -3,14 +3,14 @@ import {Video, VideoCategory} from "./List";
 import styles from './ListSection.module.css'
 import ListSectionItem, {toTimeString} from './ListSectionItem';
 
-interface ListSecionProps {
+interface ListSectionProps {
     category: VideoCategory,
     onSelectVideo: Function,
     activeRef: RefObject<HTMLDivElement>,
     isActiveCategory: boolean
 }
 
-const ListSection = ({category, onSelectVideo, activeRef, isActiveCategory}: ListSecionProps) => {
+const ListSection = ({category, onSelectVideo, activeRef, isActiveCategory}: ListSectionProps) => {
     const [isExpanded, setExpanded] = useState(false)
 
     const onExpand = () => {

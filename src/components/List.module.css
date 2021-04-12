@@ -19,21 +19,22 @@
     margin-right: 1%;
 }
 @media (max-width: 1024px) {
-    .list__header {
+    .list {
         margin-left: 10%;
         margin-right: 10%;
     }
 }
 .list__body {
-    height: 100vh;
+    height: 91vh;
     overflow-y:scroll;
+}
+
+@media (max-width: 1024px) {
+    .list__body {
+        height: 30vh;
+    }
 }
 ol>div {
     font-weight: normal;
     font-size:1em
-}
-.active {
-    font-weight: bold;
-    border-width:2px;
-    border-style:dotted;
 }

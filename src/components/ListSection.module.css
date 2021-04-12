@@ -18,7 +18,7 @@
     position: relative;
     display: flex;
     justify-content: space-between;
-    background: #e9e6e6;
+
     flex-wrap:wrap;
     flex-direction: column;
     color:#000;
@@ -30,13 +30,14 @@
 
 .section__header:hover {
     background: #f2f3f5;
+    border-radius: 50px;
 }
 .section__header span {
 
 
 }
 .section__header__title {
-    ;
+
     color:black;
     font-size: 0.5em;
     font-weight: 700;
@@ -45,7 +46,7 @@
     overflow-y:auto;
 
     color:black;
-    background: #f7f8fa;
+
     font-size: 0.4em;
     font-weight: 500;
     padding-left: 0;
@@ -58,6 +59,7 @@
 .section__body li:hover {
     list-style: none;
     background: #f2f3f5;
+    border-radius: 50px;
 }
 
 .expanded {

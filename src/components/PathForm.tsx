@@ -107,7 +107,7 @@ const PathForm = () => {
                     <label>
                         Enter Course Directory
                         <input value={path} type="text" onChange={handleOnChange}
-                               placeholder="e.g E:\Downloads\Nextjs React - The Complete Guide"/>
+                               placeholder="e.g E:\Downloads\Next js React - The Complete Guide"/>
                     </label>
                     <span className={styles.error}>{error}</span>
                     <input className={styles.button} type="submit" value="Submit" disabled={loading || !path}/>
@@ -118,7 +118,7 @@ const PathForm = () => {
                     <label>
                         Select Course
                         <select onChange={handleOnCourseChange}>
-                            <option></option>
+                            <option/>
                             {courses.map((course, i) => <option key={i} value={course.path}>{course.path}</option>)}
                         </select>
                     </label>
