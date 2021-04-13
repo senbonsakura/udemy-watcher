@@ -25,7 +25,7 @@ const ListSectionItem = ({video, onSelectVideo, activeRef, id}: ListSectionItemP
 
                     <div
                         className={styles.video}
-                        >{id + 1} .{video.name}
+                        >{id + 1}. {video.name}
                     </div>
                     <div className={styles.time}>{toTimeString(video.duration)}</div>
             </div>
