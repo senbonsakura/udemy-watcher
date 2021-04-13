@@ -6,8 +6,8 @@ interface ListOpenButtonProps {
 }
 const ListOpenButton = ({onOpen}:ListOpenButtonProps) => {
     return (
-        <button onClick={()=>onOpen()}>
-            <i className={`${styles.arrow} ${styles.left}`}/>
+        <button className={styles.button} onClick={()=>onOpen()}>
+            <i className={` ${styles.arrow} ${styles.left}`}/>
         </button>
     );
 };

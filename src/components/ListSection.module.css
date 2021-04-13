@@ -21,7 +21,7 @@
 
     flex-wrap:wrap;
     flex-direction: column;
-    color:#000;
+
     min-height: 50px;
     min-width: 400px;
     margin:5px;
@@ -29,7 +29,7 @@
 }
 
 .section__header:hover {
-    background: #f2f3f5;
+    background: #3700B3;
     border-radius: 50px;
 }
 .section__header span {
@@ -38,14 +38,14 @@
 }
 .section__header__title {
 
-    color:black;
+
     font-size: 0.5em;
     font-weight: 700;
 }
 .section__body {
     overflow-y:auto;
 
-    color:black;
+
 
     font-size: 0.4em;
     font-weight: 500;
@@ -58,7 +58,7 @@
 }
 .section__body li:hover {
     list-style: none;
-    background: #f2f3f5;
+    background: #3700B3;
     border-radius: 50px;
 }
 

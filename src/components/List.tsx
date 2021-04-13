@@ -51,7 +51,7 @@ const List: React.FC<ListProps> = ({videos, onSelectVideo, activeVideo}) => {
         !isClosed  ? <div className={styles.list}>
 
                 <h2 className={styles.list__header}>Course Content
-                    <button onClick={handleIsClosed}>x</button>
+                    <button className={styles.button} onClick={handleIsClosed}>X</button>
                 </h2>
 
             <div className={styles.list__body}>

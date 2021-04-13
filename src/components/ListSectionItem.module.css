@@ -4,7 +4,8 @@
 }
 
 .active {
-    background: #e6f2f5;
+    background: #6200EE;
+    border-radius: 50px;
 }
 .item__container {
     display:flex;
